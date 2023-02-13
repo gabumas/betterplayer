@@ -16,5 +16,5 @@ enum BetterPlayerControllerEvent {
   play,
 
   /// Changed the fit of the video widget
-  changedFit,
+  changeFit,
 }
