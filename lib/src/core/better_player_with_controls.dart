@@ -34,6 +34,9 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
 
   StreamSubscription? _controllerEventSubscription;
 
+  ValueNotifier<double> zoomListener = ValueNotifier(.0);
+  ValueNotifier<double> scaleListener = ValueNotifier(1);
+
   @override
   void initState() {
     playerVisibilityStreamController.add(true);
@@ -95,9 +98,37 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
       width: double.infinity,
       color: betterPlayerController
           .betterPlayerConfiguration.controlsConfiguration.backgroundColor,
-      child: AspectRatio(
-        aspectRatio: aspectRatio,
-        child: _buildPlayerWithControls(betterPlayerController, context),
+      child: GestureDetector(
+        onScaleUpdate: (details) {
+          double diff = details.scale - scaleListener.value;
+          if (diff > 0) {
+            if (zoomListener.value + diff > 1) {
+              zoomListener.value = 1;
+            } else {
+              zoomListener.value += diff * 2;
+            }
+          } else if (diff < 0) {
+            if (zoomListener.value + diff < 0) {
+              zoomListener.value = 0;
+            } else {
+              zoomListener.value += diff * 2;
+            }
+          }
+          scaleListener.value = details.scale;
+        },
+        onScaleEnd: (details) {
+          if (zoomListener.value <= 0.5) {
+            zoomListener.value = 0;
+            scaleListener.value = 1;
+          } else {
+            zoomListener.value = 1;
+            scaleListener.value = 1;
+          }
+        },
+        child: AspectRatio(
+          aspectRatio: aspectRatio,
+          child: _buildPlayerWithControls(betterPlayerController, context),
+        ),
       ),
     );
 
@@ -130,11 +161,18 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
         fit: StackFit.passthrough,
         children: <Widget>[
           if (placeholderOnTop) _buildPlaceholder(betterPlayerController),
-          Transform.rotate(
-            angle: rotation * pi / 180,
-            child: _BetterPlayerVideoFitWidget(
-              betterPlayerController,
-              betterPlayerController.getFit(),
+          AnimatedBuilder(
+            animation: zoomListener,
+            builder: (context, child) => Padding(
+              padding: EdgeInsets.zero +
+                  MediaQuery.of(context).padding * (1 - zoomListener.value),
+              child: Transform.rotate(
+                angle: rotation * pi / 180,
+                child: _BetterPlayerVideoFitWidget(
+                  betterPlayerController,
+                  betterPlayerController.getFit(),
+                ),
+              ),
             ),
           ),
           betterPlayerController.betterPlayerConfiguration.overlay ??
