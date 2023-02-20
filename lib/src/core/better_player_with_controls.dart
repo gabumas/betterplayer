@@ -59,6 +59,8 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
   void dispose() {
     playerVisibilityStreamController.close();
     _controllerEventSubscription?.cancel();
+    zoomListener.dispose();
+    scaleListener.dispose();
     super.dispose();
   }
 
