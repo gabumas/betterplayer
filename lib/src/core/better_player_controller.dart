@@ -470,6 +470,7 @@ class BetterPlayerController {
               _betterPlayerDataSource?.notificationConfiguration?.activityName,
           clearKey: _betterPlayerDataSource?.drmConfiguration?.clearKey,
           videoExtension: _betterPlayerDataSource!.videoExtension,
+          bufferingConfiguration: _betterPlayerDataSource?.bufferingConfiguration,
         );
 
         break;
