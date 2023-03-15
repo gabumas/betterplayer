@@ -167,7 +167,7 @@ class VideoPlayerValue {
 ///
 /// After [dispose] all further calls are ignored.
 class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
-  final BetterPlayerBufferingConfiguration bufferingConfiguration;
+  late BetterPlayerBufferingConfiguration bufferingConfiguration;
 
   /// Constructs a [VideoPlayerController] and creates video controller on platform side.
   VideoPlayerController({
@@ -181,7 +181,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
 
   final StreamController<VideoEvent> videoEventStreamController =
       StreamController.broadcast();
-  final Completer<void> _creatingCompleter = Completer<void>();
+  Completer<void> _creatingCompleter = Completer<void>();
   int? _textureId;
 
   Timer? _timer;
@@ -335,6 +335,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
     String? activityName,
     String? clearKey,
     String? videoExtension,
+    BetterPlayerBufferingConfiguration? bufferingConfiguration,
   }) {
     return _setDataSource(
       DataSource(
@@ -359,6 +360,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
         clearKey: clearKey,
         videoExtension: videoExtension,
       ),
+      bufferingConfiguration: bufferingConfiguration,
     );
   }
 
@@ -390,7 +392,10 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
     );
   }
 
-  Future<void> _setDataSource(DataSource dataSourceDescription) async {
+  Future<void> _setDataSource(
+    DataSource dataSourceDescription, {
+    BetterPlayerBufferingConfiguration? bufferingConfiguration,
+  }) async {
     if (_isDisposed) {
       return;
     }
@@ -401,7 +406,16 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
       volume: value.volume,
     );
 
-    if (!_creatingCompleter.isCompleted) await _creatingCompleter.future;
+    if (!_creatingCompleter.isCompleted) {
+      await _creatingCompleter.future;
+    } else {
+      if (bufferingConfiguration != null) {
+        _videoPlayerPlatform.dispose(_textureId);
+        this.bufferingConfiguration = bufferingConfiguration;
+        _creatingCompleter = Completer<void>();
+        await _create();
+      }
+    }
 
     _initializingCompleter = Completer<void>();
 
