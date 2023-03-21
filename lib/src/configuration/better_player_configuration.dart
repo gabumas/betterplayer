@@ -6,6 +6,9 @@ import 'package:flutter/services.dart';
 ///Master configuration which contains children that configure specific part
 ///of player.
 class BetterPlayerConfiguration {
+  /// If user can pinch to zoom in the video beyond the safe area.
+  final bool enablePinchToZoom;
+
   /// Play the video as soon as it's displayed
   final bool autoPlay;
 
@@ -120,6 +123,7 @@ class BetterPlayerConfiguration {
 
   const BetterPlayerConfiguration({
     this.aspectRatio,
+    this.enablePinchToZoom = true,
     this.autoPlay = false,
     this.startAt,
     this.looping = false,
@@ -159,6 +163,7 @@ class BetterPlayerConfiguration {
   });
 
   BetterPlayerConfiguration copyWith({
+    bool? enablePinchToZoom,
     double? aspectRatio,
     bool? autoPlay,
     Duration? startAt,
@@ -190,6 +195,7 @@ class BetterPlayerConfiguration {
     bool? useRootNavigator,
   }) {
     return BetterPlayerConfiguration(
+      enablePinchToZoom: enablePinchToZoom ?? this.enablePinchToZoom,
       aspectRatio: aspectRatio ?? this.aspectRatio,
       autoPlay: autoPlay ?? this.autoPlay,
       startAt: startAt ?? this.startAt,
