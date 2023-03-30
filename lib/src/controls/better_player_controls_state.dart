@@ -296,8 +296,13 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
     final List<BetterPlayerAsmsTrack> asmsTracks =
         betterPlayerController!.betterPlayerAsmsTracks;
     final List<Widget> children = [];
-    for (var index = 0; index < asmsTracks.length; index++) {
-      final track = asmsTracks[index];
+
+    final sortedTracks = [
+      ...(asmsTracks..sort((a, b) => (b.height ?? 0).compareTo(a.height ?? 0)))
+    ];
+
+    for (var index = 0; index < sortedTracks.length; index++) {
+      final track = sortedTracks[index];
 
       String? preferredName;
       if (track.height == 0 && track.width == 0 && track.bitrate == 0) {
@@ -306,7 +311,7 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
         preferredName =
             asmsTrackNames.length > index ? asmsTrackNames[index] : null;
       }
-      children.add(_buildTrackRow(asmsTracks[index], preferredName));
+      children.add(_buildTrackRow(sortedTracks[index], preferredName));
     }
 
     // normal videos
@@ -471,8 +476,8 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
   }
 
   void _showCupertinoModalBottomSheet(List<Widget> children) {
-    showCupertinoModalPopup<void>(
-      barrierColor: Colors.transparent,
+    showModalBottomSheet<void>(
+      backgroundColor: Colors.transparent,
       context: context,
       useRootNavigator:
           betterPlayerController?.betterPlayerConfiguration.useRootNavigator ??
