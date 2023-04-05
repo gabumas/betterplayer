@@ -14,6 +14,7 @@ class BetterPlayerCupertinoVideoProgressBar extends StatefulWidget {
     this.onDragStart,
     this.onDragUpdate,
     this.onTapDown,
+    this.showHandleShadow = true,
     Key? key,
   })  : colors = colors ?? BetterPlayerProgressColors(),
         super(key: key);
@@ -25,6 +26,7 @@ class BetterPlayerCupertinoVideoProgressBar extends StatefulWidget {
   final Function()? onDragEnd;
   final Function()? onDragUpdate;
   final Function()? onTapDown;
+  final bool showHandleShadow;
 
   @override
   _VideoProgressBarState createState() {
@@ -127,6 +129,7 @@ class _VideoProgressBarState
             painter: _ProgressBarPainter(
               _getValue(),
               widget.colors,
+              widget.showHandleShadow,
             ),
           ),
         ),
@@ -183,10 +186,11 @@ class _VideoProgressBarState
 }
 
 class _ProgressBarPainter extends CustomPainter {
-  _ProgressBarPainter(this.value, this.colors);
+  _ProgressBarPainter(this.value, this.colors, this.showHandleShadow);
 
   VideoPlayerValue value;
   BetterPlayerProgressColors colors;
+  final bool showHandleShadow;
 
   @override
   bool shouldRepaint(CustomPainter painter) {
@@ -246,7 +250,9 @@ class _ProgressBarPainter extends CustomPainter {
           center: Offset(playedPart, baseOffset + barHeight / 2),
           radius: handleHeight));
 
-    canvas.drawShadow(shadowPath, Colors.black, 0.2, false);
+    if (showHandleShadow) {
+      canvas.drawShadow(shadowPath, Colors.red, 0.2, false);
+    }
     canvas.drawCircle(
       Offset(playedPart, baseOffset + barHeight / 2),
       handleHeight,
