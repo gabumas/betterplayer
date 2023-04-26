@@ -1,5 +1,4 @@
 import 'package:better_player/src/video_player/video_player.dart';
-import 'package:better_player/src/video_player/video_player_platform_interface.dart';
 
 class MockVideoPlayerController extends VideoPlayerController {
   MockVideoPlayerController() : super(autoCreate: false) {
@@ -54,25 +53,13 @@ class MockVideoPlayerController extends VideoPlayerController {
   }
 
   @override
-  Future<void> setNetworkDataSource(
-    String dataSource, {
-    VideoFormat? formatHint,
-    Map<String, String?>? headers,
-    bool useCache = false,
-    int? maxCacheSize,
-    int? maxCacheFileSize,
-    String? cacheKey,
-    bool? showNotification,
-    String? title,
-    String? author,
-    String? imageUrl,
-    String? notificationChannelName,
-    Duration? overriddenDuration,
-    String? licenseUrl,
-    String? certificateUrl,
-    Map<String, String>? drmHeaders,
-    String? activityName,
-    String? clearKey,
-    String? videoExtension,
-  }) async {}
+  Future<void> setAssetDataSource(String dataSource,
+      {String? package,
+      bool? showNotification,
+      String? title,
+      String? author,
+      String? imageUrl,
+      String? notificationChannelName,
+      Duration? overriddenDuration,
+      String? activityName}) async {}
 }
