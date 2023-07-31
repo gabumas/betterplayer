@@ -15,6 +15,8 @@ class BetterPlayerCupertinoVideoProgressBar extends StatefulWidget {
     this.onDragUpdate,
     this.onTapDown,
     this.showHandleShadow = true,
+    this.handleHeight,
+    this.barHeight,
     Key? key,
   })  : colors = colors ?? BetterPlayerProgressColors(),
         super(key: key);
@@ -27,6 +29,8 @@ class BetterPlayerCupertinoVideoProgressBar extends StatefulWidget {
   final Function()? onDragUpdate;
   final Function()? onTapDown;
   final bool showHandleShadow;
+  final double? handleHeight;
+  final double? barHeight;
 
   @override
   _VideoProgressBarState createState() {
@@ -130,6 +134,8 @@ class _VideoProgressBarState
               _getValue(),
               widget.colors,
               widget.showHandleShadow,
+              widget.handleHeight,
+              widget.barHeight,
             ),
           ),
         ),
@@ -186,11 +192,19 @@ class _VideoProgressBarState
 }
 
 class _ProgressBarPainter extends CustomPainter {
-  _ProgressBarPainter(this.value, this.colors, this.showHandleShadow);
+  _ProgressBarPainter(
+    this.value,
+    this.colors,
+    this.showHandleShadow,
+    this.customHandleHeight,
+    this.customBarHeight,
+  );
 
   VideoPlayerValue value;
   BetterPlayerProgressColors colors;
   final bool showHandleShadow;
+  final double? customHandleHeight;
+  final double? customBarHeight;
 
   @override
   bool shouldRepaint(CustomPainter painter) {
@@ -199,8 +213,8 @@ class _ProgressBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const barHeight = 5.0;
-    const handleHeight = 6.0;
+    final barHeight = customBarHeight ?? 5.0;
+    final handleHeight = customHandleHeight ?? 6.0;
     final baseOffset = size.height / 2 - barHeight / 2.0;
 
     canvas.drawRRect(
