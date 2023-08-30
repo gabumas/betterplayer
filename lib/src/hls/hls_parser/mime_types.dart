@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'util.dart';
 
 class MimeTypes {
@@ -125,6 +127,7 @@ class MimeTypes {
   }
 
   static String? getMediaMimeType(String codecValue) {
+    log('debug codec value $codecValue');
     String codec = codecValue;
 
     codec = codec.trim().toLowerCase();
@@ -150,6 +153,7 @@ class MimeTypes {
       return MimeTypes.videoVp8;
     }
     if (codec.startsWith('mp4a')) {
+      return null;
       String? mimeType;
       if (codec.startsWith('mp4a.')) {
         final String objectTypeString = codec.substring(5);
@@ -165,7 +169,8 @@ class MimeTypes {
           }
         }
       }
-      return mimeType ??= MimeTypes.audioAac;
+      log('debug final mime type ${mimeType ?? 'null'}');
+      return mimeType ??= MimeTypes.videoH264;
     }
     if (codec.startsWith('ac-3') || codec.startsWith('dac3')) {
       return MimeTypes.audioAc3;

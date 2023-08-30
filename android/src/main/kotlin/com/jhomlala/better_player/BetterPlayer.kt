@@ -425,7 +425,7 @@ internal class BetterPlayer(
                     if (drmSessionManagerProvider != null) {
                         setDrmSessionManagerProvider(drmSessionManagerProvider!!)
                     }
-                }
+                }.setAllowChunklessPreparation(false)
                 .createMediaSource(mediaItem)
             C.CONTENT_TYPE_OTHER -> ProgressiveMediaSource.Factory(
                 mediaDataSourceFactory,

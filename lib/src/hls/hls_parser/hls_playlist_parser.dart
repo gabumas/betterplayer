@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:better_player/src/hls/hls_parser/drm_init_data.dart';
@@ -395,8 +396,7 @@ class HlsPlaylistParser {
           variableDefinitions: variableDefinitions)) {
         case typeVideo:
           {
-            final Variant? variant =
-                variants.firstWhereOrNull((it) => it.videoGroupId == groupId);
+            final Variant? variant = variants.first;
             String? codecs;
             int? width;
             int? height;
@@ -443,6 +443,7 @@ class HlsPlaylistParser {
                 : null;
             final int? channelCount =
                 _parseChannelsAttribute(line, variableDefinitions);
+            log('debug type AUDIO');
             final String? sampleMimeType =
                 codecs != null ? MimeTypes.getMediaMimeType(codecs) : null;
             final Format format = Format(
