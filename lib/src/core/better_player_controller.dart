@@ -472,6 +472,8 @@ class BetterPlayerController {
           videoExtension: _betterPlayerDataSource!.videoExtension,
           bufferingConfiguration:
               _betterPlayerDataSource?.bufferingConfiguration,
+          allowChunklessPreparation:
+              _betterPlayerDataSource?.allowChunklessPreparation,
         );
 
         break;

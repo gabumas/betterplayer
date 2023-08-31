@@ -336,6 +336,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
     String? clearKey,
     String? videoExtension,
     BetterPlayerBufferingConfiguration? bufferingConfiguration,
+    bool? allowChunklessPreparation,
   }) {
     return _setDataSource(
       DataSource(
@@ -359,6 +360,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
         activityName: activityName,
         clearKey: clearKey,
         videoExtension: videoExtension,
+        allowChunklessPreparation: allowChunklessPreparation,
       ),
       bufferingConfiguration: bufferingConfiguration,
     );

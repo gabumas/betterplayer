@@ -124,7 +124,8 @@ internal class BetterPlayer(
         licenseUrl: String?,
         drmHeaders: Map<String, String>?,
         cacheKey: String?,
-        clearKey: String?
+        clearKey: String?,
+        allowChunklessPreparation: Boolean?
     ) {
         this.key = key
         isInitialized = false
@@ -189,7 +190,7 @@ internal class BetterPlayer(
         } else {
             dataSourceFactory = DefaultDataSource.Factory(context)
         }
-        val mediaSource = buildMediaSource(uri, dataSourceFactory, formatHint, cacheKey, context)
+        val mediaSource = buildMediaSource(uri, dataSourceFactory, formatHint, cacheKey, context, allowChunklessPreparation)
         if (overriddenDuration != 0L) {
             val clippingMediaSource = ClippingMediaSource(mediaSource, 0, overriddenDuration * 1000)
             exoPlayer?.setMediaSource(clippingMediaSource)
@@ -375,7 +376,8 @@ internal class BetterPlayer(
         mediaDataSourceFactory: DataSource.Factory,
         formatHint: String?,
         cacheKey: String?,
-        context: Context
+        context: Context,
+        allowChunklessPreparation: Boolean?
     ): MediaSource {
         val type: Int
         if (formatHint == null) {
@@ -425,7 +427,7 @@ internal class BetterPlayer(
                     if (drmSessionManagerProvider != null) {
                         setDrmSessionManagerProvider(drmSessionManagerProvider!!)
                     }
-                }.setAllowChunklessPreparation(false)
+                }.setAllowChunklessPreparation(allowChunklessPreparation ?: true)
                 .createMediaSource(mediaItem)
             C.CONTENT_TYPE_OTHER -> ProgressiveMediaSource.Factory(
                 mediaDataSourceFactory,
