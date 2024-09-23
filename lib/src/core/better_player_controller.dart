@@ -208,7 +208,10 @@ class BetterPlayerController {
   final List<String> _asmsSegmentsLoaded = [];
 
   ///Currently displayed [BetterPlayerSubtitle].
-  BetterPlayerSubtitle? renderedSubtitle;
+  BetterPlayerSubtitle? renderedSubtitle; 
+  
+  ///Whether the player by default enters full screen mode
+  bool? _fullScreenByDefault;
 
   BetterPlayerController(
     this.betterPlayerConfiguration, {
@@ -555,7 +558,7 @@ class BetterPlayerController {
         ?.videoEventStreamController.stream
         .listen(_handleVideoEvent);
 
-    final fullScreenByDefault = betterPlayerConfiguration.fullScreenByDefault;
+    final fullScreenByDefault = _fullScreenByDefault ?? betterPlayerConfiguration.fullScreenByDefault;
     if (betterPlayerConfiguration.autoPlay) {
       if (fullScreenByDefault && !isFullScreen) {
         enterFullScreen();
@@ -588,6 +591,11 @@ class BetterPlayerController {
       enterFullScreen();
       videoPlayerController?.removeListener(_onFullScreenStateChanged);
     }
+  } 
+
+  ///Enable/Disable full screen by default parameter 
+  void setFullScreenByDefault(bool enable) {
+    _fullScreenByDefault = enable;
   }
 
   ///Enables full screen mode in player. This will trigger route change.
