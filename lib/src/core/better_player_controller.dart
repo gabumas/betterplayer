@@ -208,8 +208,8 @@ class BetterPlayerController {
   final List<String> _asmsSegmentsLoaded = [];
 
   ///Currently displayed [BetterPlayerSubtitle].
-  BetterPlayerSubtitle? renderedSubtitle; 
-  
+  BetterPlayerSubtitle? renderedSubtitle;
+
   ///Whether the player by default enters full screen mode
   bool? _fullScreenByDefault;
 
@@ -558,7 +558,8 @@ class BetterPlayerController {
         ?.videoEventStreamController.stream
         .listen(_handleVideoEvent);
 
-    final fullScreenByDefault = _fullScreenByDefault ?? betterPlayerConfiguration.fullScreenByDefault;
+    final fullScreenByDefault =
+        _fullScreenByDefault ?? betterPlayerConfiguration.fullScreenByDefault;
     if (betterPlayerConfiguration.autoPlay) {
       if (fullScreenByDefault && !isFullScreen) {
         enterFullScreen();
@@ -591,9 +592,9 @@ class BetterPlayerController {
       enterFullScreen();
       videoPlayerController?.removeListener(_onFullScreenStateChanged);
     }
-  } 
+  }
 
-  ///Enable/Disable full screen by default parameter 
+  ///Enable/Disable full screen by default parameter
   void setFullScreenByDefault(bool enable) {
     _fullScreenByDefault = enable;
   }
@@ -627,13 +628,11 @@ class BetterPlayerController {
       throw StateError("The data source has not been initialized");
     }
 
-    if (_appLifecycleState == AppLifecycleState.resumed) {
-      await videoPlayerController!.play();
-      _hasCurrentDataSourceStarted = true;
-      _wasPlayingBeforePause = null;
-      _postEvent(BetterPlayerEvent(BetterPlayerEventType.play));
-      _postControllerEvent(BetterPlayerControllerEvent.play);
-    }
+    await videoPlayerController!.play();
+    _hasCurrentDataSourceStarted = true;
+    _wasPlayingBeforePause = null;
+    _postEvent(BetterPlayerEvent(BetterPlayerEventType.play));
+    _postControllerEvent(BetterPlayerControllerEvent.play);
   }
 
   ///Enables/disables looping (infinity playback) mode.
