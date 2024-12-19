@@ -99,7 +99,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
                             actions[i] = afterAction
                         }
                         params?.let {
-                            it.setActions(getRemoteActions())
+                            it.setActions(getRemoteActions(null))
                         }
                         activity?.setPictureInPictureParams(params!!.build())
                     }
@@ -472,7 +472,17 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
             ) == AppOpsManager.MODE_ALLOWED
     }
 
-    private fun getRemoteActions(): List<RemoteAction> {
+    private fun getRemoteActions(isPlaying: Boolean?): List<RemoteAction> {
+        if (isPlaying != null) {
+            val current = if (isPlaying!!) PipAction.PLAY else PipAction.PAUSE
+
+            val a = actions.firstOrNull { it == current }
+            a?.let {
+                val i = actions.indexOf(a)
+                actions[i] = a!!.afterAction()!!
+            }
+        }
+        
         val maxCount = activity!!.getMaxNumPictureInPictureActions()
         if (maxCount < actions.size) {
             actions.remove(PipAction.NEXT)
@@ -490,7 +500,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
 
         
             params?.let {
-                it.setActions(getRemoteActions())
+                it.setActions(getRemoteActions(null))
             }
             activity?.setPictureInPictureParams(params!!.build())
         }
@@ -502,7 +512,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
             params = PictureInPictureParams.Builder()
 
             if (actions.isNotEmpty()) {
-                params?.setActions(getRemoteActions())
+                params?.setActions(getRemoteActions(player.isPlaying()))
             }
 
             activity!!.enterPictureInPictureMode(
