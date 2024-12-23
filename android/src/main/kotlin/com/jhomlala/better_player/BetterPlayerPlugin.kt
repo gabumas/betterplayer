@@ -509,7 +509,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
     private fun enablePictureInPicture(player: BetterPlayer) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             player.setupMediaSession(flutterState!!.applicationContext)
-            params = PictureInPictureParams.Builder()
+            params = PictureInPictureParams.Builder().setAutoEnterEnabled(true)
 
             if (actions.isNotEmpty()) {
                 params?.setActions(getRemoteActions(player.isPlaying()))
